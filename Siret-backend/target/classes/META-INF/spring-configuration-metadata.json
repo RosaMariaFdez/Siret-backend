@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "rsa",
+      "type": "dqteam.siret.security.RsaKeyProperties",
+      "sourceType": "dqteam.siret.security.RsaKeyProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "rsa.private-key",
+      "type": "java.security.interfaces.RSAPrivateKey",
+      "sourceType": "dqteam.siret.security.RsaKeyProperties"
+    },
+    {
+      "name": "rsa.public-key",
+      "type": "java.security.interfaces.RSAPublicKey",
+      "sourceType": "dqteam.siret.security.RsaKeyProperties"
+    }
+  ],
+  "hints": []
+}
