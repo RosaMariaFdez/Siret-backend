@@ -24,8 +24,8 @@ public class SiretApplication implements CommandLineRunner {
 	@Override
     public void run(String... args) throws Exception {
 		/*
-		 * // Aquí probar el registro de un usuario o cualquier otra funcionalidad
-		 * directamente System.out.println("Probando el registro de usuario...");
+		 * // Aquí probar el registro de un usuario
+		 * System.out.println("Probando el registro de usuario...");
 		 * 
 		 * // Crear un nuevo usuario de ejemplo User user = new User("Juani",
 		 * "Caravantes","juani@example.com", "password123");
@@ -36,6 +36,12 @@ public class SiretApplication implements CommandLineRunner {
 		 * // Imprimir mensaje de éxito System.out.println("Usuario registrado: " +
 		 * user.getName());
 		 */
+		
+		
+	
+		
+		
+		
         
         
     }

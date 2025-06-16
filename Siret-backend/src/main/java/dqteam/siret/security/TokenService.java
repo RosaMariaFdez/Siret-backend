@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Service;
 public class TokenService {
 
     private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder; 
 
-    public TokenService(JwtEncoder jwtEncoder) {
+    public TokenService(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
     public String generateToken(Authentication authentication) {
@@ -49,5 +52,34 @@ public class TokenService {
                 .toList();
 
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
+    }
+    
+ // Generar un token de recuperación de contraseña
+    public String generatePasswordResetToken(String email) {
+        Instant now = Instant.now();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(900)) // 15 minutos
+                .subject(email)
+                .claim("purpose", "passwordReset")
+                .build();
+
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
+    // Validar el token de recuperación de contraseña
+    public String validatePasswordResetToken(String token) {
+        try {
+            Jwt jwt = jwtDecoder.decode(token);
+
+            if (!"passwordReset".equals(jwt.getClaimAsString("purpose"))) {
+                throw new IllegalArgumentException("Token no válido para recuperación");
+            }
+
+            return jwt.getSubject();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Token inválido o expirado");
+        }
     }
 }

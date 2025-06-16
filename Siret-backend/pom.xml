@@ -47,7 +47,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		
+		<!-- servicio correo-->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		
     <!-- Google Authenticator -->
     <dependency>
         <groupId>com.warrenstrange</groupId>
@@ -125,11 +131,6 @@
 			<version>3.4.4</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.team1</groupId>
-			<artifactId>sgart_backend</artifactId>
-			<version>0.1.1-SNAPSHOT</version>
-		</dependency>
 		
 	</dependencies>
 
