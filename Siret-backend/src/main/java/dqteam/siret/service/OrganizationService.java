@@ -112,16 +112,6 @@ public class OrganizationService {
 	    return organization;
 	}
 
-	//añadir usuario a organización
-	private void addMemberToOrganization(User user, Organization org) {
-		UserOrganization relation = new UserOrganization();
-		relation.setId(new UserOrganizationId(user.getId(), org.getId()));
-		relation.setUser(user);
-		relation.setOrganization(org);
-		relation.setJoinedAt(java.time.LocalDateTime.now());
-		userOrganizationDAO.save(relation);
-	}
-	
 	//modificar organización
 	public Organization updateOrganization(UUID organizationId, OrganizationDTO dto, String requesterEmail) {
 	    Optional<User> optionalRequester = userDAO.findByEmail(requesterEmail);
@@ -205,5 +195,32 @@ public class OrganizationService {
 	    return organizationDAO.save(organization);
 	}
 
+	/*	EN USER SERVICE
+	 * //get my organizations info public List<OrganizationDTO>
+	 * getMyOrganizations(String requesterEmail) { Optional<User> optionalRequester
+	 * = userDAO.findByEmail(requesterEmail); if (optionalRequester.isEmpty()) {
+	 * throw new IllegalArgumentException("Usuario solicitante no encontrado"); }
+	 * User requester = optionalRequester.get();
+	 * 
+	 * // Obtener todas las organizaciones donde el usuario ya está
+	 * List<UserOrganization> userOrganizations =
+	 * userOrganizationDAO.findByUserOrgs(requester.getId());
+	 * 
+	 * // Mapear a DTO return userOrganizations.stream() .map(uo -> { Organization
+	 * org = uo.getOrganization(); return new OrganizationDTO(org.getId(),
+	 * org.getName(), org.getDescription(), org.getWorklogType(),
+	 * org.getBoss().getEmail()); }) .collect(Collectors.toList()); }
+	 */
+	
+	//get all organizations info
+	public List<OrganizationDTO> getAllOrganizations() {
+		 List<Organization> organizations = organizationDAO.findAll();
+		    
+		    // Mapear a DTO
+		    return organizations.stream()
+		            .map(org -> new OrganizationDTO(org.getId(), org.getName(), org.getDescription(), org.getWorklogType(), org.getBoss().getEmail()))
+		            .collect(Collectors.toList());
+	}
+	   
 
 }

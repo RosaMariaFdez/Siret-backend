@@ -82,4 +82,34 @@ public class TokenService {
             throw new IllegalArgumentException("Token inválido o expirado");
         }
     }
+    
+    // Generar un token de invitación
+    public String generateInvitationToken(String email, String organizationId) {
+		Instant now = Instant.now();
+		JwtClaimsSet claims = JwtClaimsSet.builder()
+				.issuer("self")
+				.issuedAt(now)
+				.expiresAt(now.plusSeconds(172800)) // 2 días
+				.subject(email)
+				.claim("organizationId", organizationId)
+				.claim("purpose", "invitation")
+				.build();
+
+		return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+	}
+    
+    // Validar el token de invitación
+	public String validateInvitationToken(String token) {
+		try {
+			Jwt jwt = jwtDecoder.decode(token);
+
+			if (!"invitation".equals(jwt.getClaimAsString("purpose"))) {
+				throw new IllegalArgumentException("Token no válido para invitación");
+			}
+
+			return jwt.getSubject();
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Token inválido o expirado");
+		}
+	}
 }
