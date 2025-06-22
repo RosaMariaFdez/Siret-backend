@@ -10,6 +10,7 @@ import dqteam.siret.model.UserOrganizationId;
 
 public interface UserOrganizationDAO extends JpaRepository<UserOrganization, UserOrganizationId> {
 
+	//buscar por organización
 	List<UserOrganization> findByUserOrgs(UUID userId);
 	
 	//existe ya usuario en organización

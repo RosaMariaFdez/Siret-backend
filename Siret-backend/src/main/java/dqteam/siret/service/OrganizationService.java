@@ -186,11 +186,14 @@ public class OrganizationService {
 	    }
 	    User newBoss = optionalNewBoss.get();
 
-	    newBoss.setBoss(true); //---------------------------------------------------------------------esto es para hacerlo más fácil
-//	    if (!newBoss.isBoss()) {
-//	        throw new IllegalArgumentException("El nuevo jefe no tiene permiso de jefe");
-//	    }
-
+	    newBoss.setBoss(true); //---------------------------esto es para hacerlo más fácil
+	    
+		/*
+		 * //quitar boss al jefe actual?
+		 * User currentBoss = organization.getBoss(); 
+		 * if(currentBoss != null) { currentBoss.setBoss(false); }
+		 */
+	    
 	    organization.setBoss(newBoss);
 	    return organizationDAO.save(organization);
 	}
@@ -222,5 +225,28 @@ public class OrganizationService {
 		            .collect(Collectors.toList());
 	}
 	   
+	//quitar usuario de organización
+	public void removeUserFromOrganization(String email, UUID organizationId) {
+	    Optional<User> optionalUser = userDAO.findByEmail(email);
+	    if (optionalUser.isEmpty()) {
+	        throw new IllegalArgumentException("Usuario no encontrado con email: " + email);
+	    }
+	    User user = optionalUser.get();
 
+	    Optional<Organization> optionalOrg = organizationDAO.findById(organizationId);
+	    if (optionalOrg.isEmpty()) {
+	        throw new IllegalArgumentException("Organización no encontrada con ID: " + organizationId);
+	    }
+	    Organization organization = optionalOrg.get();
+
+	    // Verificar si el usuario es miembro de la organización
+	    UserOrganizationId userOrgId = new UserOrganizationId(user.getId(), organization.getId());
+	    Optional<UserOrganization> userOrgRelation = userOrganizationDAO.findById(userOrgId);
+	    if (userOrgRelation.isEmpty()) {
+	        throw new IllegalArgumentException("El usuario no es miembro de esta organización");
+	    }
+
+	    // Eliminar la relación
+	    userOrganizationDAO.delete(userOrgRelation.get());
+	}
 }

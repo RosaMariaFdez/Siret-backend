@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Base64;
-
+	//NO SE USA, PERO NO SE BORRA PORQUE SE PUEDE USAR EN EL FUTURO
 @Service
 public class TwoFactorAuthService {
     private static final String ISSUER = "Siret"; 

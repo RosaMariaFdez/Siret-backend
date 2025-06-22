@@ -1,8 +1,10 @@
 package dqteam.siret.security;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +22,19 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER")); // Asignar un rol por defecto
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        if (user.isAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        if (user.isBoss()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_BOSS"));
+        }
+
+        // Todos los usuarios normales
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        return authorities;
     }
 
     @Override

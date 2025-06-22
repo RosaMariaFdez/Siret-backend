@@ -1,6 +1,7 @@
 package dqteam.siret.dao;
 
 import java.util.UUID;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +12,7 @@ public interface UserDAO extends JpaRepository<User, UUID> {
 	Optional<User> findByEmail(String email);
 	boolean existsByEmail(String email);
 	Optional<User> findByEmailAndPassword(String email, String password);
-
+	//findByIsAdminTrue();
+	List<User> findByIsAdminTrue();
 
 }
