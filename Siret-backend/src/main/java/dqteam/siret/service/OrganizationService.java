@@ -224,7 +224,9 @@ public class OrganizationService {
 		            .map(org -> new OrganizationDTO(org.getId(), org.getName(), org.getDescription(), org.getWorklogType(), org.getBoss().getEmail()))
 		            .collect(Collectors.toList());
 	}
-	   
+	  
+	//solo para roles admin y jefe
+	
 	//quitar usuario de organización
 	public void removeUserFromOrganization(String email, UUID organizationId) {
 	    Optional<User> optionalUser = userDAO.findByEmail(email);

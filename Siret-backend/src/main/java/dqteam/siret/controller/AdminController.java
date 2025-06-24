@@ -68,5 +68,10 @@ public class AdminController {
         return ResponseEntity.ok(organizations);
     }
     
-
+    //añadir usuario a una organización sin necesidad de invitación
+    @PutMapping("/assignUserToOrganization")
+    public ResponseEntity<?> addUserToOrganization(@RequestParam UUID userId, @RequestParam UUID organizationId) {
+		adminService.assignUserToOrganization(userId, organizationId);
+		return ResponseEntity.ok("Usuario añadido a la organización");
+    }
 }

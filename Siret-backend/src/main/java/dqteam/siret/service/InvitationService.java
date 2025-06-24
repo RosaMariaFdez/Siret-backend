@@ -105,7 +105,7 @@ public class InvitationService {
         Organization org = invitation.getOrganization();
 
         // Comprobar si ya pertenece
-        if (userOrganizationDAO.existsByUserIdAndOrganizationId(user.getId(), org.getId())) {
+        if (userOrganizationDAO.existsById_UserIdAndId_OrganizationId(user.getId(), org.getId())) {
             throw new IllegalStateException("Ya perteneces a esta organización");
         }
 

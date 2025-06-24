@@ -1,8 +1,6 @@
 package dqteam.siret.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.util.UUID;
 import java.util.regex.Pattern;
 

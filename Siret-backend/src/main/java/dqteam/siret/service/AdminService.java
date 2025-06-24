@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dqteam.siret.dao.OrganizationDAO;
 import dqteam.siret.dao.UserDAO;
 import dqteam.siret.dao.UserOrganizationDAO;
+import dqteam.siret.model.Organization;
 import dqteam.siret.model.OrganizationSimpleDTO;
 import dqteam.siret.model.User;
 import dqteam.siret.model.UserDTO;
@@ -17,12 +19,16 @@ import dqteam.siret.model.UserOrganization;
 @Service
 public class AdminService {
 
-    @Autowired
-    private UserDAO userDAO;
+
+    private final UserDAO userDAO;
+    private final UserOrganizationDAO userOrganizationDAO;
+    private final OrganizationDAO organizationDAO;
     
-    @Autowired
-    private UserOrganizationDAO userOrganizationDAO;
-    
+    public AdminService(UserDAO userDAO, UserOrganizationDAO userOrganizationDAO, OrganizationDAO organizationDAO) {
+		this.userDAO = userDAO;
+		this.userOrganizationDAO = userOrganizationDAO;
+		this.organizationDAO = organizationDAO;
+	}
     //dar permisos
     public void grantAdminRole(String email) {
         User user = userDAO.findByEmail(email)
@@ -68,7 +74,7 @@ public class AdminService {
     
     // Obtener organizaciones de un usuario por email
     public List<OrganizationSimpleDTO> getOrganizationsOfUser(UUID userId) {
-        List<UserOrganization> relations = userOrganizationDAO.findByUserOrgs(userId);
+        List<UserOrganization> relations = userOrganizationDAO.findById_UserId(userId);
 
         return relations.stream()
                 .map(rel -> new OrganizationSimpleDTO(
@@ -78,5 +84,25 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    //añadir usuario a una organización
+    public void assignUserToOrganization(UUID userId, UUID organizationId) {
+        User user = userDAO.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        Organization organization = organizationDAO.findById(organizationId)
+            .orElseThrow(() -> new IllegalArgumentException("Organización no encontrada"));
+
+        boolean alreadyExists = userOrganizationDAO.existsById_UserIdAndId_OrganizationId(user.getId(), organization.getId());
+        
+        if (alreadyExists) {
+            throw new IllegalStateException("El usuario ya pertenece a esta organización");
+        }
+
+        UserOrganization userOrganization = new UserOrganization();
+        userOrganization.setUser(user);
+        userOrganization.setOrganization(organization);
+
+        userOrganizationDAO.save(userOrganization);
+    }
 }
 
